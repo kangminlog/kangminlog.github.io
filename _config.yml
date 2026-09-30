@@ -1,0 +1,11 @@
+title: kangminlog
+tagline: 관측 도구를 뜯어보고 정리한다
+description: >-
+  OpenTelemetry 와 ClickHouse 를 다루면서 알게 된 것을 쓴다.
+  직접 확인해볼 수 있는 근거를 같이 둔다.
+lang: ko
+theme: minima
+plugins:
+  - jekyll-feed
+exclude:
+  - README.md
