@@ -23,3 +23,20 @@ bundle exec jekyll serve
 ```
 
 Ruby 와 Jekyll 이 필요하다. 없어도 push 해서 확인하면 된다.
+
+## 글 목록
+
+**OpenTelemetry**
+- 자바 에이전트는 어떻게 코드를 안 고치고 추적하나
+- OTLP 는 벤더 종속을 어떻게 끊는가 — 그리고 어디까지만 끊는가
+- 트레이스·로그·메트릭을 하나로 묶는 것은 무엇인가
+- OpenTelemetry Collector 의 수신-가공-송신 파이프라인
+
+**ClickHouse**
+- APM 백엔드에서 집계를 적재 시점으로 옮기기 — 롤업
+- MergeTree 정렬 키와 파티션을 고르는 기준
+
+**인프라**
+- ARM 서버에 관측 스택을 통째로 올리기
+- 인터넷이 없는 현장에 서버를 넣는다는 것
+- SNMP 로 장비를 볼 때 — 표준 MIB 와 벤더 MIB
