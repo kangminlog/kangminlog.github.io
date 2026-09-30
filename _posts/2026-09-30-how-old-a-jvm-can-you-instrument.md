@@ -221,6 +221,58 @@ OpenJDK 행으로 본다.** 별도 벤더가 아니다. 반대로 IBM Semeru 는
 J9 쪽으로 봐야 한다. `java -version` 출력에 `HotSpot` 이 있으면 OpenJDK 계열,
 `IBM J9 VM` 이나 `Eclipse OpenJ9` 가 있으면 J9 계열이다.
 
+## 플랫폼이 벤더를 정한다
+
+벤더를 고를 수 있다고 생각하면 오해다. **상용 WAS 는 JDK 를 들고 오지 않는다.**
+JEUS 의 설치 프로그램은 JDK 경로를 물어보고 기본값이 `/usr/jdk1.7` 이다. 순서가
+JDK 먼저, WAS 나중이다. 그러니 "그 WAS 가 무엇으로 도나" 는 제품이 정한 것이 아니고
+구축한 사람이 정한 것이다.
+
+그런데 사람이 고를 수 있는 폭도 좁다. 플랫폼마다 쓸 수 있는 JVM 이 사실상 하나다.
+
+| 플랫폼 | JVM | 자바 7 지원 여부 | 판정 |
+|---|---|---|---|
+| Linux x86 | Oracle JDK / OpenJDK | `≥7u60` | 열림 |
+| Solaris (SPARC·x86) | Oracle JDK | `≥7u60` | 열림 |
+| HP-UX (PA-RISC·Itanium) | HP-UX JVM | `≥7.0.10` | 열림 |
+| AIX (PowerPC) | IBM J9 | **8 SR5 이상만** | **닫힘** |
+
+AIX 용 HotSpot 은 없다. 그래서 **AIX 에서 도는 WAS 는 자바 7 이면 이 경로가 막힌다.**
+같은 "자바 7" 인데 어느 하드웨어에 올렸느냐가 결론을 바꾼다.
+
+거꾸로 보면 이건 좋은 소식이기도 하다. **`java -version` 출력 하나에 벤더가 같이
+찍히므로 플랫폼을 따로 묻지 않아도 갈림길이 드러난다.** `uname -a` 를 덧붙이면 확실해진다.
+
+## 업데이트 번호는 어느 정도 추측이 된다
+
+`7u60` 이라는 경계가 얼마나 위험한지는 자바 7 의 업데이트 이력을 시점으로 놓으면 보인다.
+
+```
+7u25  2013-06-18
+7u40  2013-09-10
+7u45  2013-10-15
+7u51  2014-01-14
+7u55  2014-04-15
+7u60  2014-05-28   ← 하한선
+7u71  2014-10-14
+7u80  2015-04-14   ← 마지막 공개 업데이트
+```
+
+Oracle 의 자바 7 **공개 업데이트는 2015 년 4 월 `7u80` 에서 끝났다.** 그 뒤 릴리스는
+지원 계약 고객만 받는다. 여기서 두 갈래가 나온다.
+
+**공개 업데이트만 따라간 곳은 `7u80` 이나 `7u79` 에서 멈춰 있다.** 하한선을 한참 넘는다.
+반면 **구축 시점에 얼려버린 곳은 `7u25`~`7u45` 일 수 있고 그건 미달이다.** Java EE 7
+세대 WAS 가 2013 년 제품이니 그 무렵 깔고 손대지 않았다면 정확히 그 구간이다.
+
+그래서 실제 갈림길은 "한 번이라도 JVM 을 올렸는가" 다. 2014~2015 년은 자바 취약점이
+쏟아진 시기라 보안 점검을 받는 조직은 대체로 올렸다. 다만 WAS 의 JVM 은 "도는 것을
+건드리지 않는다" 는 관성이 강해 얼려두는 곳도 많다.
+
+**미달이어도 나쁜 소식은 아니다.** `7u45` 에서 `7u80` 으로 가는 것은 같은 자바 7 대역
+안의 마이너 업데이트라 **WAS 재인증 문제가 아니다.** 자바 8 로 올려달라는 요청보다
+훨씬 가볍다. 경계선에 걸렸을 때 꺼낼 수 있는 카드가 하나 있는 셈이다.
+
 ## 그래서 경계선
 
 정리하면 이렇다.
@@ -292,3 +344,7 @@ DB 스팬은 아직 못 재봤다. 데이터소스를 붙이면 `db.<벤더>` �
 - [Elastic APM adopts W3C TraceContext](https://www.elastic.co/blog/elastic-apm-adopts-w3c-tracecontext) — 자바 에이전트 1.14 이상
 - [Pinpoint](https://github.com/pinpoint-apm/pinpoint) — 에이전트 JDK 지원 매트릭스
 - [Scouter releases](https://github.com/scouter-project/scouter/releases) — v2.20.0 "The lowest supported version has been changed to java 8"
+- [JEUS 설치 개요 및 준비사항](https://technet.tmaxsoft.com/upload/download/online/jeus/pver-20140203-000001/getting-started/chapter_JEUS_outline.html) — JDK 선행 설치, 플랫폼별 요구사항
+- [JEUS UNIX 설치](https://technet.tmaxsoft.com/upload/download/online/jeus/pver-20140203-000001/getting-started/chapter_install_unix.html) — 설치 시 JDK 경로 입력(기본값 `/usr/jdk1.7`)
+- [End of Java 7 Public Updates](https://www.java.com/en/download/help/java_7.html) — 2015 년 4 월 종료
+- [Java version history](https://en.wikipedia.org/wiki/Java_version_history) — 7u 릴리스 날짜
