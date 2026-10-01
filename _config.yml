@@ -1,4 +1,5 @@
 title: kangminlog
+url: https://kangminlog.github.io
 tagline: 관측 도구를 뜯어보고 정리한다
 description: >-
   OpenTelemetry 와 ClickHouse 를 다루면서 알게 된 것을 쓴다.

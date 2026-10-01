@@ -1,5 +1,7 @@
 # kangminlog.github.io
 
+<https://kangminlog.github.io>
+
 GitHub Pages 블로그. 빌드 도구를 로컬에 깔지 않는다 — 깃허브가 Jekyll 로 만든다.
 
 ## 글 추가
