@@ -1,4 +1,4 @@
-import { analyze, status, toNum, toStr } from './predict.js?v=3';
+import { analyze, status, toNum, toStr } from './predict.js?v=4';
 
 const $ = (id) => document.getElementById(id);
 const KEY = 'cycle-share-v2';
@@ -53,7 +53,7 @@ function render() {
   // 상단 상태
   if (st.kind === 'empty') {
     $('statusMain').textContent = '기록을 시작해 보세요';
-    $('statusSub').textContent = '달력에서 생리한 날을 눌러 표시합니다.';
+    $('statusSub').textContent = '아래에 마지막 생리 시작일과 주기를 입력해 주세요.';
   } else if (st.kind === 'period') {
     $('statusMain').textContent = `생리 ${st.day}일째`;
     $('statusSub').textContent = `다음 예정일 ${md(a.predictions[0].start)}`;
@@ -93,6 +93,17 @@ function render() {
   }
 
   $('btnToday').textContent = period.has(now) ? '오늘 생리 표시 지우기' : '오늘 생리 표시하기';
+
+  // 주기 입력 칸: 사용자가 고치는 중이 아니면 현재 기록으로 채운다
+  if (!$('cycleForm').contains(document.activeElement)) {
+    const last = a.periods[a.periods.length - 1];
+    $('setStart').value = last ? toStr(last.start) : '';
+    $('setStart').max = now;
+    $('setCycle').value = state.cycle || '';
+    $('setPeriod').value = state.period || '';
+    $('setCycle').placeholder = `자동 (${a.cycleLen}일)`;
+    $('setPeriod').placeholder = `자동 (${a.periodLen}일)`;
+  }
 }
 
 $('prevMonth').onclick = () => { view.m === 1 ? (view = { y: view.y - 1, m: 12 }) : view.m--; render(); };
@@ -124,26 +135,29 @@ $('daySheet').onclose = () => {
 };
 
 // 설정
-function cycleHint() {
-  const a = analyze(state.days, today());
-  $('cycleHint').textContent = a.samples
-    ? `기록으로 계산한 평균은 주기 ${a.cycleLen}일, 기간 ${a.periodLen}일이에요. 숫자를 넣으면 그 값을 대신 씁니다.`
-    : '주기를 알고 있으면 넣어 주세요. 비워 두면 28일로 계산하다가, 생리가 두 번 이상 기록되면 평균으로 바뀝니다.';
-}
-$('btnSettings').onclick = () => {
-  $('setCycle').value = state.cycle || '';
-  $('setPeriod').value = state.period || '';
-  cycleHint();
-  $('settings').showModal();
-};
-// 입력하는 즉시 저장한다 (아이폰은 버튼을 눌러도 입력 칸의 change 가 안 올 수 있다)
-function saveCycle() {
+// 주기 입력: 저장을 누르면 시작일부터 생리 기간만큼 달력에 표시하고 예정일을 다시 계산한다
+$('cycleForm').onsubmit = (ev) => {
+  ev.preventDefault();
+  const start = $('setStart').value;
+  if (start && (!validDate(start) || start > today())) { $('cycleHint').textContent = '시작일은 오늘까지의 날짜로 넣어 주세요.'; return; }
   state = normalize({ ...state, cycle: $('setCycle').value, period: $('setPeriod').value });
+  if (start) {
+    const s = toNum(start);
+    const len = analyze(state.days, today(), state.cycle, state.period).periodLen;
+    // 같은 생리로 볼 만큼 가까운 기존 표시는 지우고 새 시작일 기준으로 다시 채운다 (시작일을 고쳐 넣는 경우)
+    const kept = state.days.filter((d) => toNum(d) < s - 7 || toNum(d) > s + len + 6);
+    const added = Array.from({ length: len }, (_, i) => toStr(s + i)).filter((d) => d <= today());
+    state.days = [...new Set([...kept, ...added])].sort();
+    const [y, m] = start.split('-').map(Number);
+    view = { y, m };
+  }
   save();
+  document.activeElement.blur();
   render();
-}
-$('setCycle').oninput = $('setPeriod').oninput = saveCycle;
-$('settings').onclose = saveCycle;
+  $('cycleHint').textContent = '저장했어요. 달력에 반영됐습니다.';
+  scrollTo({ top: 0, behavior: 'smooth' });
+};
+$('btnSettings').onclick = () => $('settings').showModal();
 $('btnShare').onclick = async () => {
   if (!state.days.length) { alert('먼저 생리한 날을 기록해 주세요.'); return; }
   const q = new URLSearchParams({ d: state.days.join(',') });

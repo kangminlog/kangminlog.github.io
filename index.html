@@ -12,7 +12,7 @@
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
   <link rel="icon" href="icon-192.png">
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <!-- 달력 화면 -->
@@ -41,6 +41,24 @@
     </ul>
     <button id="btnToday" class="primary"></button>
     <p class="hint">날짜를 누르면 생리일과 메모를 기록할 수 있어요.</p>
+
+    <form id="cycleForm" class="card">
+      <h3>주기 입력</h3>
+      <label for="setStart">마지막 생리 시작일</label>
+      <input id="setStart" type="date">
+      <div class="two">
+        <div>
+          <label for="setCycle">주기 (일)</label>
+          <input id="setCycle" type="number" inputmode="numeric" min="15" max="60" placeholder="자동">
+        </div>
+        <div>
+          <label for="setPeriod">생리 기간 (일)</label>
+          <input id="setPeriod" type="number" inputmode="numeric" min="1" max="10" placeholder="자동">
+        </div>
+      </div>
+      <button class="primary">저장</button>
+      <p id="cycleHint" class="hint"></p>
+    </form>
   </main>
 
   <!-- 날짜를 눌렀을 때 -->
@@ -61,13 +79,6 @@
   <dialog id="settings">
     <h3>설정</h3>
     <section>
-      <label for="setCycle">내 주기 (일) — 생리 시작일부터 다음 시작일까지</label>
-      <input id="setCycle" type="number" inputmode="numeric" min="15" max="60" placeholder="비워 두면 기록 평균으로 자동 계산">
-      <label for="setPeriod" class="gap">생리 기간 (일)</label>
-      <input id="setPeriod" type="number" inputmode="numeric" min="1" max="10" placeholder="비워 두면 기록 평균으로 자동 계산">
-      <p id="cycleHint" class="hint"></p>
-    </section>
-    <section>
       <button id="btnShare" class="secondary">공유 링크 보내기</button>
       <p id="shareHint" class="hint">링크를 받은 사람이 열면 지금 기록이 그 기기에 저장돼요. 기록을 바꾸면 다시 보내야 하고, 링크만 있으면 누구나 볼 수 있으니 둘만 있는 대화방에만 보내세요.</p>
     </section>
@@ -75,9 +86,9 @@
       <button id="btnReset" class="secondary danger">이 기기의 기록 모두 지우기</button>
       <p class="hint">기록은 이 기기의 브라우저에만 저장됩니다. 예측은 평균 주기로 계산한 참고값이라 피임 용도로 쓰기에는 정확하지 않아요.</p>
     </section>
-    <form method="dialog"><button class="primary">저장하고 닫기</button></form>
+    <form method="dialog"><button class="primary">닫기</button></form>
   </dialog>
 
-  <script type="module" src="app.js?v=3"></script>
+  <script type="module" src="app.js?v=4"></script>
 </body>
 </html>

@@ -80,6 +80,10 @@ dialog section button + button { margin-top: 8px; }
 .check { display: flex; align-items: center; gap: 10px; font-size: 16px; color: var(--text); min-height: 48px; }
 .check input { width: 22px; height: 22px; accent-color: var(--accent); }
 .code { font-size: 28px; font-weight: 700; letter-spacing: 0.15em; text-align: center; margin: 12px 0 0; user-select: all; }
-label.gap { margin-top: 12px; }
+.card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 16px; margin-top: 24px; }
+.card input { background: var(--bg); }
+.card button { margin-top: 16px; }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 12px; }
+input[type=date] { min-height: 48px; -webkit-appearance: none; appearance: none; text-align: left; }
 [hidden] { display: none !important; }
 #joinCode::placeholder { letter-spacing: normal; }
