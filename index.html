@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>우리 주기</title>
+  <meta name="robots" content="noindex">
+  <meta name="referrer" content="no-referrer">
+  <meta name="theme-color" content="#e2685a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="우리 주기">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="icon-180.png">
+  <link rel="icon" href="icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- 달력 화면 -->
+  <main id="app">
+    <header>
+      <div id="statusCard">
+        <div id="statusMain"></div>
+        <div id="statusSub"></div>
+      </div>
+      <button id="btnSettings" class="icon" aria-label="설정">⚙</button>
+    </header>
+
+    <nav class="month">
+      <button id="prevMonth" class="icon" aria-label="이전 달">‹</button>
+      <h2 id="monthTitle"></h2>
+      <button id="nextMonth" class="icon" aria-label="다음 달">›</button>
+    </nav>
+    <div class="weekdays"><span>일</span><span>월</span><span>화</span><span>수</span><span>목</span><span>금</span><span>토</span></div>
+    <div id="grid"></div>
+
+    <ul class="legend">
+      <li><i class="sw period"></i>생리</li>
+      <li><i class="sw predicted"></i>예정</li>
+      <li><i class="sw fertile"></i>가임기</li>
+      <li><i class="sw ovulation"></i>배란 예상</li>
+    </ul>
+    <button id="btnToday" class="primary"></button>
+    <p class="hint">날짜를 누르면 생리일과 메모를 기록할 수 있어요.</p>
+  </main>
+
+  <!-- 날짜를 눌렀을 때 -->
+  <dialog id="daySheet">
+    <form method="dialog">
+      <h3 id="dayTitle"></h3>
+      <label class="check"><input type="checkbox" id="dayPeriod"> 생리일</label>
+      <label for="dayNote">메모 (공유 링크에 함께 담겨요)</label>
+      <textarea id="dayNote" maxlength="500" rows="3"></textarea>
+      <div class="row">
+        <button value="cancel" class="secondary">닫기</button>
+        <button value="save" class="primary">저장</button>
+      </div>
+    </form>
+  </dialog>
+
+  <!-- 설정 -->
+  <dialog id="settings">
+    <h3>설정</h3>
+    <section>
+      <button id="btnShare" class="secondary">공유 링크 보내기</button>
+      <p id="shareHint" class="hint">링크를 받은 사람이 열면 지금 기록이 그 기기에 저장돼요. 기록을 바꾸면 다시 보내야 하고, 링크만 있으면 누구나 볼 수 있으니 둘만 있는 대화방에만 보내세요.</p>
+    </section>
+    <section>
+      <button id="btnReset" class="secondary danger">이 기기의 기록 모두 지우기</button>
+      <p class="hint">기록은 이 기기의 브라우저에만 저장됩니다. 예측은 평균 주기로 계산한 참고값이라 피임 용도로 쓰기에는 정확하지 않아요.</p>
+    </section>
+    <form method="dialog"><button class="primary">닫기</button></form>
+  </dialog>
+
+  <script type="module" src="app.js"></script>
+</body>
+</html>
