@@ -1,4 +1,4 @@
-import { analyze, status, toNum, toStr } from './predict.js';
+import { analyze, status, toNum, toStr } from './predict.js?v=3';
 
 const $ = (id) => document.getElementById(id);
 const KEY = 'cycle-share-v2';
@@ -136,13 +136,14 @@ $('btnSettings').onclick = () => {
   cycleHint();
   $('settings').showModal();
 };
-$('setCycle').onchange = $('setPeriod').onchange = () => {
+// 입력하는 즉시 저장한다 (아이폰은 버튼을 눌러도 입력 칸의 change 가 안 올 수 있다)
+function saveCycle() {
   state = normalize({ ...state, cycle: $('setCycle').value, period: $('setPeriod').value });
-  $('setCycle').value = state.cycle || '';   // 범위를 벗어난 값은 비운다
-  $('setPeriod').value = state.period || '';
   save();
   render();
-};
+}
+$('setCycle').oninput = $('setPeriod').oninput = saveCycle;
+$('settings').onclose = saveCycle;
 $('btnShare').onclick = async () => {
   if (!state.days.length) { alert('먼저 생리한 날을 기록해 주세요.'); return; }
   const q = new URLSearchParams({ d: state.days.join(',') });
