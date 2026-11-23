@@ -61,6 +61,13 @@
   <dialog id="settings">
     <h3>설정</h3>
     <section>
+      <label for="setCycle">내 주기 (일) — 생리 시작일부터 다음 시작일까지</label>
+      <input id="setCycle" type="number" inputmode="numeric" min="15" max="60" placeholder="비워 두면 기록 평균으로 자동 계산">
+      <label for="setPeriod" class="gap">생리 기간 (일)</label>
+      <input id="setPeriod" type="number" inputmode="numeric" min="1" max="10" placeholder="비워 두면 기록 평균으로 자동 계산">
+      <p id="cycleHint" class="hint"></p>
+    </section>
+    <section>
       <button id="btnShare" class="secondary">공유 링크 보내기</button>
       <p id="shareHint" class="hint">링크를 받은 사람이 열면 지금 기록이 그 기기에 저장돼요. 기록을 바꾸면 다시 보내야 하고, 링크만 있으면 누구나 볼 수 있으니 둘만 있는 대화방에만 보내세요.</p>
     </section>

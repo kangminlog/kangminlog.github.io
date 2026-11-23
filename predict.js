@@ -6,7 +6,8 @@ export const toStr = (n) => new Date(n * DAY).toISOString().slice(0, 10);
 const mean = (a) => a.reduce((x, y) => x + y, 0) / a.length;
 
 // days: 생리일로 표시한 날짜 목록, today: 오늘 날짜 문자열
-export function analyze(days, today) {
+// cycle, period: 직접 입력한 주기·기간(일). 없으면 기록의 평균을 쓴다
+export function analyze(days, today, cycle, period) {
   const t = toNum(today);
   const nums = [...new Set(days)].map(toNum).sort((a, b) => a - b);
 
@@ -24,11 +25,11 @@ export function analyze(days, today) {
     const g = periods[i].start - periods[i - 1].start;
     if (g >= 15 && g <= 60) gaps.push(g);
   }
-  const cycleLen = gaps.length ? Math.round(mean(gaps.slice(-6))) : 28;
+  const cycleLen = cycle || (gaps.length ? Math.round(mean(gaps.slice(-6))) : 28);
 
   // 아직 진행 중일 수 있는 최근 생리는 기간 평균에서 뺀다
   const lens = periods.filter((p) => p.end < t - 1).map((p) => p.end - p.start + 1);
-  const periodLen = lens.length ? Math.max(2, Math.round(mean(lens.slice(-6)))) : 5;
+  const periodLen = period || (lens.length ? Math.max(2, Math.round(mean(lens.slice(-6)))) : 5);
 
   const predictions = [];
   const last = periods[periods.length - 1];
